@@ -39,6 +39,10 @@ path:hover{
 <h2 id="result"></h2>
 <p>❌ Mistakes: <span id="mistakes">0</span></p>
 
+<!-- أصوات -->
+<audio id="correctSound" src="correct.mp3"></audio>
+<audio id="wrongSound" src="wrong.mp3"></audio>
+
 <div id="map">
 <svg viewBox="0 0 1000 1">
   <path d="..." id="PT"></path>
@@ -81,7 +85,6 @@ path:hover{
   <path d="..." id="GB"></path>
   <path d="..." id="XK"></path>
 </svg>
-
 </div>
 
 <script>
@@ -130,6 +133,7 @@ const countries = {
 let correctKey;
 let mistakes = 0;
 
+// إعداد جولة جديدة
 function newRound(){
     const keys = Object.keys(countries);
     correctKey = keys[Math.floor(Math.random()*keys.length)];
@@ -138,25 +142,35 @@ function newRound(){
     document.getElementById("result").innerText="";
 }
 
+// التحقق من الإجابة مع تشغيل الأصوات
 function check(id){
+    const correctAudio = document.getElementById("correctSound");
+    const wrongAudio = document.getElementById("wrongSound");
+
     if(id === correctKey){
         document.getElementById("result").innerText="✔️ Correct!";
+        correctAudio.currentTime = 0;
+        correctAudio.play();
         setTimeout(newRound,500);
     } else {
         mistakes++;
         document.getElementById("mistakes").innerText = mistakes;
         document.getElementById("result").innerText="❌ Wrong!";
-        // لا يتغير الدور، يجب اختيار الدولة الصحيحة
+        wrongAudio.currentTime = 0;
+        wrongAudio.play();
     }
 }
 
+// عند تحميل الصفحة
 window.onload = () => {
     document.querySelectorAll("path").forEach(p=>{
         p.onclick = () => check(p.id);
     });
     newRound();
 };
-</script>
+</script>  
+</body>
+</html>
 
 </body>
 </html>
